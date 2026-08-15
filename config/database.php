@@ -1,24 +1,39 @@
 <?php
-// class buat konek ke database, biar gampang dipanggil di file lain
+class Database
+{
+    private string $host = "localhost";
+    private string $user = "root";
+    private string $pass = "";
+    private string $db_name = "ambas_sador";
 
-class Database {
-    var $host = "localhost";
-    var $db_name = "ecommerce_db";
-    var $user = "root";
-    var $pass = "";
-    var $conn;
+    public $conn;
 
-    function getConnection() {
+    /**
+     * Membuat koneksi ke database menggunakan MySQLi
+     * @return mysqli
+     */
+    public function getConnection()
+    {
+        $this->conn = null;
 
-        $this->conn = mysqli_connect($this->host, $this->user, $this->pass, $this->db_name);
+        try {
+            $this->conn = mysqli_connect($this->host, $this->user, $this->pass, $this->db_name);
 
-        if (!$this->conn) {
-            die("Koneksi Database Gagal: " . mysqli_connect_error());
+            if (!$this->conn) {
+                throw new Exception("Koneksi Database Gagal: " . mysqli_connect_error());
+            }
+
+            // Set charset ke utf8mb4 agar mendukung semua karakter
+            mysqli_set_charset($this->conn, "utf8mb4");
+
+        } catch (Exception $e) {
+            die("<strong>Database Error:</strong> " . $e->getMessage());
         }
-
-        mysqli_set_charset($this->conn, "utf8mb4");
 
         return $this->conn;
     }
+}
+if (!defined('BASE_URL')) {
+    define('BASE_URL', 'http://localhost/webdesign/');
 }
 ?>

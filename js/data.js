@@ -7,7 +7,7 @@ const products = [
         oldPrice: 192000,
         rating: 0,
         reviews: 0,
-        image: "/assets/image/image1.png",
+        image: "assets/image/image1.png",
         badge: "HOT DEAL",
         description: "Mengusung warna hitam pekat yang abadi dan dipadukan dengan grafis branding yang tegas.",
         stock: 1
@@ -20,7 +20,7 @@ const products = [
         oldPrice: 1200000,
         rating: 0,
         reviews: 0,
-        image: "/assets/image/image2.png",
+        image: "assets/image/image2.png",
         badge: "Diskon 29%",
         description: "Mengusung model workwear / Harrington style dengan kerah klasik dan potongan modern.",
         stock: 1
@@ -33,7 +33,7 @@ const products = [
         oldPrice: 180000,
         rating: 0,
         reviews: 0,
-        image: "/assets/image/image3.png",
+        image: "assets/image/image3.png",
         badge: "Hot Deal",
         description: "Topi baseball klasik dengan desain minimalis dan logo bordir premium yang elegan.",
         stock: 1
@@ -46,7 +46,7 @@ const products = [
         oldPrice: 650000,
         rating: 0,
         reviews: 0,
-        image: "/assets/image/image4.png",
+        image: "assets/image/image4.png",
         badge: "Baru",
         description: "Kacamata hitam dengan desain pixelated yang unik, memberikan sentuhan retro dan gaya yang berbeda.",
         stock: 1
@@ -59,7 +59,7 @@ const products = [
         oldPrice: 450000,
         rating: 0,
         reviews: 0,
-        image: "/assets/image/image5.png",
+        image: "assets/image/image5.png",
         badge: "Terpopuler",
         description: "Tas ransel ergonomis berbahan anti-air lengkap dengan port pengisian daya USB external dan kompartemen terorganisir.",
         stock: 1
@@ -72,7 +72,7 @@ const products = [
         oldPrice: 250000,
         rating: 0,
         reviews: 0,
-        image: "/assets/image/image6.png",
+        image: "assets/image/image6.png",
         badge: "Promo",
         description: "Celana panjang dengan potongan wide leg yang nyaman, menampilkan logo lion gold embroidery yang mewah.",
         stock: 1
@@ -85,7 +85,7 @@ const products = [
         oldPrice: 280000,
         rating: 0,
         reviews: 0,
-        image: "/assets/image/image7.png",
+        image: "assets/image/image7.png",
         badge: "Baru",
         description: "Mengusung siluet low-cut yang ikonik dan chunky Fat Laces yang unik, sneakers ini memberikan perpaduan sempurna antara sentuhan skate style.",
         stock: 1
@@ -98,7 +98,7 @@ const products = [
         oldPrice: 199000,
         rating: 0,
         reviews: 0,
-        image: "/assets/image/image8.png",
+        image: "assets/image/image8.png",
         badge: "Best Seller",
         description: "Mengusung desain timeless berwarna hitam doff/matte, botol minum ini memberikan kombinasi sempurna antara estetika modern.",
         stock: 1

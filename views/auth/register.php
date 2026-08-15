@@ -36,7 +36,8 @@ $googleClientID = "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com";
         
         <!-- Header / Logo Brand -->
         <div class="text-center mb-6">
-            <a href="index.php" class="inline-flex items-center gap-2 mb-2">
+            <!-- DIPERBAIKI: Path ke index utama -->
+            <a href="../../index.php" class="inline-flex items-center gap-2 mb-2">
                 <div class="w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center text-white shadow-lg shadow-emerald-500/30">
                     <i class="fa-solid fa-bag-shopping text-xl"></i>
                 </div>
@@ -57,7 +58,8 @@ $googleClientID = "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com";
         <?php endif; ?>
 
         <!-- Form Registrasi Manual -->
-        <form action="../../app/Controllers/AuthController.php?action=register" method="POST" class="space-y-4">
+        <!-- DIPERBAIKI: Path mengarah ke ../../app/controllers/AuthController.php -->
+        <form action="../../app/controllers/AuthController.php?action=register" method="POST" class="space-y-4">
             <div>
                 <label for="username" class="block text-xs font-semibold text-slate-700 mb-1.5">Username</label>
                 <div class="relative">
@@ -95,7 +97,7 @@ $googleClientID = "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com";
             <span class="bg-white px-3 text-[11px] font-semibold text-slate-400 uppercase tracking-wider absolute">atau</span>
         </div>
 
-        <!-- Tombol Google Login Custom (Memicu Pilihan Akun Gmail) -->
+        <!-- Tombol Google Login Custom -->
         <button type="button" onclick="triggerGoogleLogin()" 
             class="w-full bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-semibold py-2.5 px-4 rounded-xl shadow-sm hover:shadow transition-all duration-200 flex items-center justify-center gap-3 text-sm">
             <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24">
@@ -108,7 +110,8 @@ $googleClientID = "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com";
         </button>
 
         <!-- Hidden Form untuk mengirimkan Token Google ke Backend PHP -->
-        <form id="googleAuthForm" action="../../app/Controllers/AuthController.php?action=google_login" method="POST" class="hidden">
+        <!-- DIPERBAIKI: Path huruf kecil controllers & AuthController -->
+        <form id="googleAuthForm" action="../../app/controllers/AuthController.php?action=google_login" method="POST" class="hidden">
             <input type="hidden" name="credential" id="googleCredential">
         </form>
 
@@ -138,7 +141,6 @@ $googleClientID = "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com";
             if (typeof google !== 'undefined') {
                 google.accounts.id.prompt((notification) => {
                     if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-                        // Fallback jika prompt dicegah browser, gunakan OAuth Redirect / Standard Button
                         const oauth2Endpoint = 'https://accounts.google.com/o/oauth2/v2/auth';
                         const form = document.createElement('form');
                         form.setAttribute('method', 'GET');
@@ -146,11 +148,11 @@ $googleClientID = "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com";
 
                         const params = {
                             'client_id': '<?php echo $googleClientID; ?>',
-                            'redirect_uri': window.location.origin + '/app/Controllers/AuthController.php?action=google_callback',
+                            'redirect_uri': window.location.origin + '/app/controllers/AuthController.php?action=google_login',
                             'response_type': 'code',
                             'scope': 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
                             'include_granted_scopes': 'true',
-                            'prompt': 'select_account' // Memaksa munculnya pilihan akun Gmail
+                            'prompt': 'select_account'
                         };
 
                         for (var p in params) {

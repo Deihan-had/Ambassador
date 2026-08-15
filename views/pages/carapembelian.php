@@ -1,15 +1,18 @@
 <?php
-// buka session dulu biar bisa cek user login
-if (session_status() == PHP_SESSION_NONE) {
+// Menjalankan session jika belum aktif
+if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+
+// Koneksi database
+require_once __DIR__ . '/../../config/database.php';
 ?>
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Cara Pembelian — Ambassador</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -21,8 +24,7 @@ if (session_status() == PHP_SESSION_NONE) {
         }
 
         body {
-            font-family: Inter, ui-sans-serif, system-ui, -apple-system,
-                BlinkMacSystemFont, "Segoe UI", sans-serif;
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         }
 
         .step-card {
@@ -40,13 +42,13 @@ if (session_status() == PHP_SESSION_NONE) {
 </head>
 
 <body class="bg-slate-50 text-slate-800">
-    <!-- NAVBAR -->
-    <header class="sticky top-0 z-50 bg-white border-b border-slate-200">
+    <!-- Navbar -->
+    <header class="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="h-16 flex items-center justify-between">
 
                 <a href="/index.php">
-                    <div class="flex items-center gap-2 cursor-pointer" onclick="resetFilters()">
+                    <div class="flex items-center gap-2 cursor-pointer">
                         <div class="w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center text-white shadow-lg shadow-emerald-500/30">
                             <i class="fa-solid fa-bag-shopping text-xl"></i>
                         </div>
@@ -70,7 +72,7 @@ if (session_status() == PHP_SESSION_NONE) {
         </div>
     </header>
 
-    <!-- HERO -->
+    <!-- Hero -->
     <section class="bg-slate-900 text-white">
         <div class="max-w-5xl mx-auto px-4 py-16 text-center">
             <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/10 text-xs font-semibold text-slate-300 mb-5">
@@ -83,21 +85,21 @@ if (session_status() == PHP_SESSION_NONE) {
             </h1>
 
             <p class="max-w-2xl mx-auto text-sm sm:text-base leading-relaxed text-slate-400">
-                Ikuti beberapa langkah sederhana berikut untuk membeli
-                produk di Ambassador.
+                Ikuti beberapa langkah sederhana berikut untuk membeli produk favoritmu di Ambassador.
             </p>
         </div>
     </section>
 
-    <!-- MAIN -->
+    <!-- Konten utama -->
     <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
 
-        <!-- STEP 1 -->
+        <!-- Langkah 1 -->
         <section class="step-card bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm mb-5">
             <div class="flex gap-5">
                 <div class="step-number shrink-0 w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-black">
                     01
                 </div>
+
                 <div>
                     <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-emerald-600 mb-2">
                         <i class="fa-solid fa-magnifying-glass"></i>
@@ -107,20 +109,19 @@ if (session_status() == PHP_SESSION_NONE) {
                         Temukan produk yang kamu inginkan
                     </h2>
                     <p class="text-sm text-slate-500 leading-relaxed">
-                        Jelajahi produk di Ambassador dan pilih produk yang
-                        ingin kamu beli. Pastikan kamu memperhatikan informasi
-                        produk dan ketersediaan stok.
+                        Jelajahi produk di Ambassador dan pilih produk yang ingin kamu beli. Pastikan kamu memperhatikan informasi produk dan ketersediaan stok.
                     </p>
                 </div>
             </div>
         </section>
 
-        <!-- STEP 2 -->
+        <!-- Langkah 2 -->
         <section class="step-card bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm mb-5">
             <div class="flex gap-5">
                 <div class="step-number shrink-0 w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-black">
                     02
                 </div>
+
                 <div>
                     <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-emerald-600 mb-2">
                         <i class="fa-solid fa-cart-plus"></i>
@@ -139,8 +140,7 @@ if (session_status() == PHP_SESSION_NONE) {
                                 Tambah ke Keranjang
                             </h3>
                             <p class="text-xs text-slate-500 leading-relaxed">
-                                Cocok jika kamu ingin membeli beberapa produk
-                                sekaligus sebelum checkout.
+                                Cocok jika kamu ingin membeli beberapa produk sekaligus sebelum checkout.
                             </p>
                         </div>
 
@@ -152,8 +152,7 @@ if (session_status() == PHP_SESSION_NONE) {
                                 Beli Sekarang
                             </h3>
                             <p class="text-xs text-slate-500 leading-relaxed">
-                                Cocok jika kamu sudah yakin dengan satu produk
-                                dan ingin langsung menuju checkout.
+                                Cocok jika kamu sudah yakin dengan satu produk dan ingin langsung menuju checkout.
                             </p>
                         </div>
                     </div>
@@ -161,12 +160,13 @@ if (session_status() == PHP_SESSION_NONE) {
             </div>
         </section>
 
-        <!-- STEP 3 -->
+        <!-- Langkah 3 -->
         <section class="step-card bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm mb-5">
             <div class="flex gap-5">
                 <div class="step-number shrink-0 w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-black">
                     03
                 </div>
+
                 <div>
                     <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-emerald-600 mb-2">
                         <i class="fa-solid fa-basket-shopping"></i>
@@ -176,15 +176,13 @@ if (session_status() == PHP_SESSION_NONE) {
                         Pastikan produk dan jumlahnya benar
                     </h2>
                     <p class="text-sm text-slate-500 leading-relaxed">
-                        Jika menggunakan keranjang, periksa kembali produk,
-                        jumlah barang, dan total harga. Jumlah pembelian juga
-                        akan menyesuaikan stok produk yang tersedia.
+                        Jika menggunakan keranjang, periksa kembali produk, jumlah barang, dan total harga. Jumlah pembelian juga akan menyesuaikan stok produk yang tersedia.
                     </p>
                 </div>
             </div>
         </section>
 
-        <!-- STEP 4 -->
+        <!-- Langkah 4 -->
         <section class="step-card bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm mb-5">
             <div class="flex gap-5">
                 <div class="step-number shrink-0 w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-black">
@@ -199,9 +197,7 @@ if (session_status() == PHP_SESSION_NONE) {
                         Masukkan kode promo jika tersedia
                     </h2>
                     <p class="text-sm text-slate-500 leading-relaxed mb-5">
-                        Sebelum menyelesaikan pembelian, kamu dapat memasukkan
-                        kode promo pada bagian checkout untuk mendapatkan
-                        potongan harga.
+                        Sebelum menyelesaikan pembelian, kamu dapat memasukkan kode promo pada bagian checkout untuk mendapatkan potongan harga.
                     </p>
 
                     <div class="inline-flex items-center gap-3 px-4 py-3 rounded-xl bg-amber-50 border border-amber-100">
@@ -210,10 +206,10 @@ if (session_status() == PHP_SESSION_NONE) {
                         </div>
                         <div>
                             <div class="text-[10px] uppercase font-bold text-amber-600">
-                                Kode Promo
+                                Kode Promo Diskon
                             </div>
                             <div class="font-black text-amber-800">
-                                DISCOUNT10
+                                AMBASDISKON / DISCOUNT10
                             </div>
                         </div>
                     </div>
@@ -221,12 +217,13 @@ if (session_status() == PHP_SESSION_NONE) {
             </div>
         </section>
 
-        <!-- STEP 5 -->
+        <!-- Langkah 5 -->
         <section class="step-card bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm mb-5">
             <div class="flex gap-5">
                 <div class="step-number shrink-0 w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-black">
                     05
                 </div>
+
                 <div>
                     <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-emerald-600 mb-2">
                         <i class="fa-solid fa-credit-card"></i>
@@ -236,20 +233,19 @@ if (session_status() == PHP_SESSION_NONE) {
                         Lanjutkan ke proses checkout
                     </h2>
                     <p class="text-sm text-slate-500 leading-relaxed">
-                        Setelah produk dan promo sudah sesuai, lanjutkan
-                        ke checkout. Periksa kembali total pembayaran sebelum
-                        menyelesaikan pesanan.
+                        Setelah produk dan promo sudah sesuai, lanjutkan ke checkout. Periksa kembali total pembayaran sebelum menyelesaikan pesanan.
                     </p>
                 </div>
             </div>
         </section>
 
-        <!-- STEP 6 -->
+        <!-- Langkah 6 -->
         <section class="step-card bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm mb-5">
             <div class="flex gap-5">
                 <div class="step-number shrink-0 w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-black">
                     06
                 </div>
+
                 <div>
                     <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-emerald-600 mb-2">
                         <i class="fa-solid fa-circle-check"></i>
@@ -259,23 +255,20 @@ if (session_status() == PHP_SESSION_NONE) {
                         Selesaikan pesanan
                     </h2>
                     <p class="text-sm text-slate-500 leading-relaxed">
-                        Setelah pesanan berhasil diproses, sistem akan
-                        menampilkan konfirmasi pembelian beserta nomor
-                        invoice pesanan.
+                        Setelah pesanan berhasil diproses, sistem akan menampilkan konfirmasi pembelian beserta nomor invoice pesanan.
                     </p>
 
                     <div class="mt-5 rounded-2xl bg-emerald-50 border border-emerald-100 p-4 flex items-start gap-3">
                         <i class="fa-solid fa-circle-info text-emerald-600 mt-0.5"></i>
                         <p class="text-xs text-emerald-800 leading-relaxed">
-                            Simpan nomor invoice yang ditampilkan setelah
-                            pembelian berhasil untuk referensi pesanan.
+                            Simpan nomor invoice yang ditampilkan setelah pembelian berhasil untuk referensi pesanan.
                         </p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- QUICK FLOW -->
+        <!-- Alur singkat -->
         <section class="mt-14">
             <div class="bg-slate-900 rounded-3xl p-7 sm:p-10 text-white">
                 <div class="text-center mb-8">
@@ -292,9 +285,7 @@ if (session_status() == PHP_SESSION_NONE) {
                         <div class="w-12 h-12 rounded-xl bg-white/10 mx-auto flex items-center justify-center">
                             <i class="fa-solid fa-magnifying-glass"></i>
                         </div>
-                        <div class="text-xs font-bold mt-2">
-                            Pilih Produk
-                        </div>
+                        <div class="text-xs font-bold mt-2">Pilih Produk</div>
                     </div>
 
                     <i class="fa-solid fa-arrow-down md:fa-arrow-right text-slate-600"></i>
@@ -303,9 +294,7 @@ if (session_status() == PHP_SESSION_NONE) {
                         <div class="w-12 h-12 rounded-xl bg-white/10 mx-auto flex items-center justify-center">
                             <i class="fa-solid fa-cart-shopping"></i>
                         </div>
-                        <div class="text-xs font-bold mt-2">
-                            Keranjang
-                        </div>
+                        <div class="text-xs font-bold mt-2">Keranjang</div>
                     </div>
 
                     <i class="fa-solid fa-arrow-down md:fa-arrow-right text-slate-600"></i>
@@ -314,9 +303,7 @@ if (session_status() == PHP_SESSION_NONE) {
                         <div class="w-12 h-12 rounded-xl bg-white/10 mx-auto flex items-center justify-center">
                             <i class="fa-solid fa-ticket"></i>
                         </div>
-                        <div class="text-xs font-bold mt-2">
-                            Promo
-                        </div>
+                        <div class="text-xs font-bold mt-2">Promo</div>
                     </div>
 
                     <i class="fa-solid fa-arrow-down md:fa-arrow-right text-slate-600"></i>
@@ -325,9 +312,7 @@ if (session_status() == PHP_SESSION_NONE) {
                         <div class="w-12 h-12 rounded-xl bg-white/10 mx-auto flex items-center justify-center">
                             <i class="fa-solid fa-credit-card"></i>
                         </div>
-                        <div class="text-xs font-bold mt-2">
-                            Checkout
-                        </div>
+                        <div class="text-xs font-bold mt-2">Checkout</div>
                     </div>
 
                     <i class="fa-solid fa-arrow-down md:fa-arrow-right text-slate-600"></i>
@@ -336,15 +321,13 @@ if (session_status() == PHP_SESSION_NONE) {
                         <div class="w-12 h-12 rounded-xl bg-emerald-500 mx-auto flex items-center justify-center">
                             <i class="fa-solid fa-check"></i>
                         </div>
-                        <div class="text-xs font-bold mt-2">
-                            Berhasil
-                        </div>
+                        <div class="text-xs font-bold mt-2">Berhasil</div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- CTA -->
+        <!-- Tombol ajakan belanja -->
         <section class="text-center mt-14">
             <h2 class="text-2xl font-black text-slate-900 mb-2">
                 Siap mulai belanja?
@@ -353,21 +336,21 @@ if (session_status() == PHP_SESSION_NONE) {
                 Temukan produk favoritmu di Ambassador.
             </p>
 
-            <a href="/index.php" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-slate-900 hover:bg-emerald-600 text-white text-sm font-bold transition">
+            <a href="/index.php#productGrid" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-slate-900 hover:bg-emerald-600 text-white text-sm font-bold transition shadow-md">
                 <i class="fa-solid fa-bag-shopping"></i>
-                Mulai Belanja
+                Mulai Belanja Sekarang
             </a>
         </section>
 
     </main>
 
-    <!-- FOOTER -->
+    <!-- Footer -->
     <footer class="bg-white border-t border-slate-200 mt-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div>
                     <div class="font-black text-slate-900">
-                        Ambas<span class="text-emerald-500">STORE</span>
+                        Ambas<span class="text-emerald-500">sador</span>
                     </div>
                     <p class="text-xs text-slate-400 mt-1">
                         Belanja lebih mudah, lebih nyaman.
@@ -381,3 +364,4 @@ if (session_status() == PHP_SESSION_NONE) {
         </div>
     </footer>
 </body>
+</html>

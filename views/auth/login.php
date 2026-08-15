@@ -1,8 +1,10 @@
 <?php
-// buka session dulu
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
+
+// TODO: ganti ini pake google client id punya sendiri
+$googleClientID = "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com";
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -16,6 +18,8 @@ if (session_status() == PHP_SESSION_NONE) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Google Identity Services Library -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
@@ -32,7 +36,7 @@ if (session_status() == PHP_SESSION_NONE) {
         
         <!-- Header / Logo Brand -->
         <div class="text-center mb-6">
-            <a href="index.php" class="inline-flex items-center gap-2 mb-2">
+            <a href="../../index.php" class="inline-flex items-center gap-2 mb-2">
                 <div class="w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center text-white shadow-lg shadow-emerald-500/30">
                     <i class="fa-solid fa-bag-shopping text-xl"></i>
                 </div>
@@ -40,11 +44,11 @@ if (session_status() == PHP_SESSION_NONE) {
                     Ambas<span class="text-emerald-600">sador</span>
                 </span>
             </a>
-            <h2 class="text-xl font-bold text-slate-800">Selamat Datang Kembali!</h2>
-            <p class="text-slate-500 text-xs mt-1">Silakan masuk ke akun Anda</p>
+            <h2 class="text-xl font-bold text-slate-800">Selamat Datang Kembali</h2>
+            <p class="text-slate-500 text-xs mt-1">Masuk ke akun Anda untuk melanjutkan</p>
         </div>
 
-        <!-- Alert Notifikasi Error -->
+        <!-- Alert Pesan Error -->
         <?php if (isset($_SESSION['error'])): ?>
             <div class="mb-5 bg-red-50 border border-red-200 text-red-600 text-xs px-4 py-3 rounded-xl flex items-center gap-2.5">
                 <i class="fa-solid fa-circle-exclamation text-base shrink-0"></i>
@@ -52,83 +56,125 @@ if (session_status() == PHP_SESSION_NONE) {
             </div>
         <?php endif; ?>
 
-        <!-- Alert Notifikasi Sukses (misal setelah berhasil register) -->
-        <?php if (isset($_SESSION['success'])): ?>
-            <div class="mb-5 bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs px-4 py-3 rounded-xl flex items-center gap-2.5">
-                <i class="fa-solid fa-circle-check text-base shrink-0"></i>
-                <span><?php echo htmlspecialchars($_SESSION['success']); unset($_SESSION['success']); ?></span>
-            </div>
-        <?php endif; ?>
-
-        <!-- Form Login -->
-        <form action="../../index.php?action=login" method="POST" class="space-y-4">
-            
-            <!-- Input Username -->
+        <!-- Form Login Manual -->
+        <form action="../../app/controllers/AuthController.php?action=login" method="POST" class="space-y-4">
             <div>
-                <label for="username" class="block text-xs font-semibold text-slate-700 mb-1.5">
-                    Username
-                </label>
+                <label for="username" class="block text-xs font-semibold text-slate-700 mb-1.5">Username / Email</label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                         <i class="fa-regular fa-user text-sm"></i>
                     </div>
-                    <input type="text" id="username" name="username" required autocomplete="off"
+                    <input type="text" id="username" name="username" required 
                         placeholder="Masukkan username Anda"
                         class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all duration-200 text-slate-800">
                 </div>
             </div>
 
-            <!-- Input Password -->
             <div>
-                <label for="password" class="block text-xs font-semibold text-slate-700 mb-1.5">
-                    Password
-                </label>
+                <label for="password" class="block text-xs font-semibold text-slate-700 mb-1.5">Password</label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                         <i class="fa-solid fa-lock text-sm"></i>
                     </div>
                     <input type="password" id="password" name="password" required 
-                        placeholder="••••••••"
-                        class="w-full pl-10 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all duration-200 text-slate-800">
-                    <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 transition-colors">
-                        <i class="fa-regular fa-eye text-sm"></i>
-                    </button>
+                        placeholder="Masukkan password Anda"
+                        class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all duration-200 text-slate-800">
                 </div>
             </div>
 
-            <!-- Tombol Submit -->
             <button type="submit" 
                 class="w-full mt-2 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-3 rounded-xl shadow-lg shadow-emerald-600/30 hover:shadow-emerald-600/40 transition-all duration-200 flex items-center justify-center gap-2 text-sm">
                 <i class="fa-solid fa-right-to-bracket text-xs"></i>
-                Masuk / Sign In
-            </button>
-            <button type="submit" 
-                class="w-full mt-2 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-3 rounded-xl shadow-lg shadow-emerald-600/30 hover:shadow-emerald-600/40 transition-all duration-200 flex items-center justify-center gap-2 text-sm">
-                <a href="/index.php">Kembali Belanja</a>
+                Sign In
             </button>
         </form>
 
-        <!-- Footer Card / Link ke Register -->
+        <!-- Divider -->
+        <div class="relative my-5 flex items-center justify-center">
+            <div class="border-t border-slate-200 w-full"></div>
+            <span class="bg-white px-3 text-[11px] font-semibold text-slate-400 uppercase tracking-wider absolute">atau</span>
+        </div>
+
+        <!-- Tombol Google Login Custom -->
+        <button type="button" onclick="triggerGoogleLogin()" 
+            class="w-full bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-semibold py-2.5 px-4 rounded-xl shadow-sm hover:shadow transition-all duration-200 flex items-center justify-center gap-3 text-sm">
+            <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+            </svg>
+            <span>Masuk dengan Google</span>
+        </button>
+
+        <!-- Hidden Form untuk mengirimkan Token Google ke Backend PHP -->
+        <form id="googleAuthForm" action="../../app/controllers/AuthController.php?action=google_login" method="POST" class="hidden">
+            <input type="hidden" name="credential" id="googleCredential">
+        </form>
+
+        <!-- Footer Card -->
         <div class="mt-6 pt-4 border-t border-slate-100 text-center text-xs text-slate-500">
             Belum punya akun? 
             <a href="register.php" class="font-bold text-emerald-600 hover:text-emerald-700 transition-colors ml-1">
-                Sign up di sini
+                Daftar di sini
             </a>
         </div>
     </div>
 
-    <!-- Script Intip Password -->
     <script>
-        const togglePassword = document.querySelector('#togglePassword');
-        const password = document.querySelector('#password');
-        const toggleIcon = togglePassword.querySelector('i');
+        window.onload = function () {
+            if (typeof google !== 'undefined') {
+                google.accounts.id.initialize({
+                    client_id: "<?php echo $googleClientID; ?>",
+                    callback: handleCredentialResponse,
+                    auto_select: false
+                });
+            }
+        };
 
-        togglePassword.addEventListener('click', function () {
-            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
-            password.setAttribute('type', type);
-            toggleIcon.classList.toggle('fa-eye');
-            toggleIcon.classList.toggle('fa-eye-slash');
-        });
+        function triggerGoogleLogin() {
+            if (typeof google !== 'undefined') {
+                google.accounts.id.prompt((notification) => {
+                    if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+                        const oauth2Endpoint = 'https://accounts.google.com/o/oauth2/v2/auth';
+                        const form = document.createElement('form');
+                        form.setAttribute('method', 'GET');
+                        form.setAttribute('action', oauth2Endpoint);
+
+                        // PERBAIKAN: Mengambil URL path secara otomatis termasuk nama folder project di localhost
+                        const currentPath = window.location.pathname; // contoh: /ambassador/views/auth/login.php
+                        const projectFolder = currentPath.substring(0, currentPath.indexOf('/views/')); 
+                        const redirectUri = window.location.origin + projectFolder + '/app/controllers/AuthController.php?action=google_login';
+
+                        const params = {
+                            'client_id': '<?php echo $googleClientID; ?>',
+                            'redirect_uri': redirectUri,
+                            'response_type': 'code',
+                            'scope': 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
+                            'include_granted_scopes': 'true',
+                            'prompt': 'select_account'
+                        };
+
+                        for (var p in params) {
+                            var input = document.createElement('input');
+                            input.setAttribute('type', 'hidden');
+                            input.setAttribute('name', p);
+                            input.setAttribute('value', params[p]);
+                            form.appendChild(input);
+                        }
+                        document.body.appendChild(form);
+                        form.submit();
+                    }
+                });
+            } else {
+                alert('Gagal memuat library Google. Periksa koneksi internet Anda.');
+            }
+        }
+
+        function handleCredentialResponse(response) {
+            document.getElementById('googleCredential').value = response.credential;
+            document.getElementById('googleAuthForm').submit();
+        }
     </script>
 </body>
 </html>
