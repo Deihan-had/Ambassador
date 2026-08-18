@@ -3,7 +3,6 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
-// TODO: ganti ini pake google client id punya sendiri
 $googleClientID = "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com";
 ?>
 <!DOCTYPE html>
@@ -36,7 +35,6 @@ $googleClientID = "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com";
         
         <!-- Header / Logo Brand -->
         <div class="text-center mb-6">
-            <!-- DIPERBAIKI: Path ke index utama -->
             <a href="../../index.php" class="inline-flex items-center gap-2 mb-2">
                 <div class="w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center text-white shadow-lg shadow-emerald-500/30">
                     <i class="fa-solid fa-bag-shopping text-xl"></i>
@@ -58,7 +56,6 @@ $googleClientID = "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com";
         <?php endif; ?>
 
         <!-- Form Registrasi Manual -->
-        <!-- DIPERBAIKI: Path mengarah ke ../../app/controllers/AuthController.php -->
         <form action="../../app/controllers/AuthController.php?action=register" method="POST" class="space-y-4">
             <div>
                 <label for="username" class="block text-xs font-semibold text-slate-700 mb-1.5">Username</label>
@@ -110,7 +107,6 @@ $googleClientID = "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com";
         </button>
 
         <!-- Hidden Form untuk mengirimkan Token Google ke Backend PHP -->
-        <!-- DIPERBAIKI: Path huruf kecil controllers & AuthController -->
         <form id="googleAuthForm" action="../../app/controllers/AuthController.php?action=google_login" method="POST" class="hidden">
             <input type="hidden" name="credential" id="googleCredential">
         </form>
@@ -125,19 +121,27 @@ $googleClientID = "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com";
     </div>
 
     <script>
+        const CLIENT_ID = "<?php echo $googleClientID; ?>";
+
         // Inisialisasi Google SDK
         window.onload = function () {
-            if (typeof google !== 'undefined') {
+            if (typeof google !== 'undefined' && CLIENT_ID && !CLIENT_ID.includes("YOUR_GOOGLE_CLIENT_ID")) {
                 google.accounts.id.initialize({
-                    client_id: "<?php echo $googleClientID; ?>",
+                    client_id: CLIENT_ID,
                     callback: handleCredentialResponse,
                     auto_select: false
                 });
             }
         };
 
-        // Fungsi saat tombol diklik untuk menampilkan dialog Pilihan Akun Google
+        // Fungsi penangan klik tombol
         function triggerGoogleLogin() {
+            // Validasi client ID sebelum redirect
+            if (!CLIENT_ID || CLIENT_ID.includes("YOUR_GOOGLE_CLIENT_ID")) {
+                alert("Harap ganti \$googleClientID di file register.php dengan Google Client ID milik Anda terlebih dahulu!");
+                return;
+            }
+
             if (typeof google !== 'undefined') {
                 google.accounts.id.prompt((notification) => {
                     if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
@@ -147,7 +151,7 @@ $googleClientID = "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com";
                         form.setAttribute('action', oauth2Endpoint);
 
                         const params = {
-                            'client_id': '<?php echo $googleClientID; ?>',
+                            'client_id': CLIENT_ID,
                             'redirect_uri': window.location.origin + '/app/controllers/AuthController.php?action=google_login',
                             'response_type': 'code',
                             'scope': 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',

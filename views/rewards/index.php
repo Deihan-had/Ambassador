@@ -164,7 +164,7 @@ if (!$isLoggedIn) {
                 </a>
 
                 <div class="flex items-center gap-3">
-                    <a href="../profile/index.php"
+                    <a href="../profile.php"
                         class="text-xs sm:text-sm font-semibold text-slate-500 hover:text-emerald-600 flex items-center gap-1.5">
                         <i class="fa-solid fa-arrow-left text-xs"></i> Kembali ke Profil
                     </a>

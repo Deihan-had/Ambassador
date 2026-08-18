@@ -1,15 +1,18 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-$isLoggedIn = isset($_SESSION['id_users']) || isset($_SESSION['user']);
+// Cek status login
+$isLoggedIn = isset($_SESSION['id_users']) || isset($_SESSION['user']) || isset($_SESSION['username']);
 
 if (!$isLoggedIn) {
-    // DIPERBAIKI: Relative Path ke Login
     header("Location: ../auth/login.php");
     exit();
 }
 
-$username = $_SESSION['user']['username'] ?? $_SESSION['username'] ?? 'Pengguna';
+$username = $_SESSION['user']['nama'] ?? $_SESSION['user']['username'] ?? $_SESSION['username'] ?? 'Pengguna';
+$orders = $_SESSION['user_orders'] ?? [];
 ?>
 
 <!DOCTYPE html>
@@ -38,8 +41,7 @@ $username = $_SESSION['user']['username'] ?? $_SESSION['username'] ?? 'Pengguna'
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="h-16 flex items-center justify-between">
 
-                <!-- DIPERBAIKI: Relative Path ke index utama -->
-                <a href="../../index.php" class="flex items-center gap-2">
+                <a href="../index.php" class="flex items-center gap-2">
                     <div class="w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center text-white shadow-md">
                         <i class="fa-solid fa-bag-shopping text-xl"></i>
                     </div>
@@ -51,14 +53,12 @@ $username = $_SESSION['user']['username'] ?? $_SESSION['username'] ?? 'Pengguna'
                 </a>
 
                 <div class="flex items-center gap-3">
-                    <!-- DIPERBAIKI: Relative Path ke Halaman Profile -->
-                    <a href="../profile/index.php" class="text-xs font-bold text-slate-700 hover:text-emerald-600 flex items-center gap-2 bg-slate-100 px-3 py-2 rounded-xl">
+                    <a href="profile.php" class="text-xs font-bold text-slate-700 hover:text-emerald-600 flex items-center gap-2 bg-slate-100 px-3 py-2 rounded-xl">
                         <i class="fa-regular fa-user"></i>
                         <span><?php echo htmlspecialchars($username); ?></span>
                     </a>
 
-                    <!-- DIPERBAIKI: Relative Path ke index utama -->
-                    <a href="../../index.php" class="text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 px-3.5 py-2 rounded-xl shadow transition">
+                    <a href="../index.php" class="text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 px-3.5 py-2 rounded-xl shadow transition">
                         Belanja Lagi
                     </a>
                 </div>
@@ -93,53 +93,68 @@ $username = $_SESSION['user']['username'] ?? $_SESSION['username'] ?? 'Pengguna'
             </button>
         </div>
 
-        <!-- Orders List Container -->
+        <!-- Orders List Container Dinamis -->
         <div class="space-y-4">
 
-            <!-- Card Order 1 -->
-            <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
-                <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
-                    <div class="flex items-center gap-3">
-                        <span class="font-mono text-xs font-bold text-slate-800">#INV-89123</span>
-                        <span class="text-slate-300">|</span>
-                        <span class="text-xs text-slate-400">14 Agt 2026</span>
-                    </div>
+            <?php if (!empty($orders)): ?>
+                <?php foreach ($orders as $order): ?>
+                    <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
+                        
+                        <!-- Header Card Pesanan -->
+                        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
+                            <div class="flex items-center gap-3">
+                                <span class="font-mono text-xs font-bold text-slate-800">#<?php echo htmlspecialchars($order['order_id']); ?></span>
+                                <span class="text-slate-300">|</span>
+                                <span class="text-xs text-slate-400"><?php echo isset($order['date']) ? $order['date'] : date('d M Y'); ?></span>
+                            </div>
 
-                    <span class="bg-emerald-100 text-emerald-700 text-xs font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1">
-                        <i class="fa-solid fa-truck-fast text-[10px]"></i>
-                        Sedang Dikirim
-                    </span>
+                            <span class="bg-emerald-100 text-emerald-700 text-xs font-bold px-2.5 py-1 rounded-full flex items-center gap-1">
+                                <i class="fa-solid fa-clock text-[10px]"></i>
+                                <?php echo htmlspecialchars($order['status'] ?? 'Dalam Proses'); ?>
+                            </span>
+                        </div>
+
+                        <!-- Detail Barang (Looping Barang dari Session) -->
+                        <div class="space-y-3">
+                            <?php if (isset($order['items']) && is_array($order['items'])): ?>
+                                <?php foreach ($order['items'] as $item): ?>
+                                    <div class="flex items-center justify-between gap-4">
+                                        <div class="flex items-center gap-3 min-w-0">
+                                            <div class="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-emerald-600 text-lg shrink-0">
+                                                <i class="fa-solid fa-box"></i>
+                                            </div>
+                                            <div class="truncate">
+                                                <h4 class="text-sm font-bold text-slate-800 truncate"><?php echo htmlspecialchars($item['name']); ?></h4>
+                                                <p class="text-xs text-slate-400 mt-0.5"><?php echo $item['quantity']; ?> Barang x Rp <?php echo number_format($item['price'], 0, ',', '.'); ?></p>
+                                            </div>
+                                        </div>
+                                        <div class="text-right shrink-0">
+                                            <span class="text-sm font-extrabold text-slate-800">Rp <?php echo number_format($item['price'] * $item['quantity'], 0, ',', '.'); ?></span>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </div>
+
+                        <!-- Action & Total Pembayaran Footer -->
+                        <div class="flex items-center justify-between pt-3 border-t border-slate-100">
+                            <div>
+                                <span class="text-xs text-slate-400 block">Total Belanja</span>
+                                <span class="text-base font-extrabold text-emerald-600">Rp <?php echo number_format($order['total'], 0, ',', '.'); ?></span>
+                            </div>
+                            <a href="layanan/melacakpesanan.php" class="px-4 py-2 rounded-xl bg-emerald-50 text-emerald-700 text-xs font-bold hover:bg-emerald-100 transition">
+                                Lacak Paket
+                            </a>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <!-- Empty State (Jika belum ada pesanan) -->
+                <div class="text-center py-12 bg-white rounded-2xl border border-slate-200">
+                    <i class="fa-solid fa-receipt text-4xl text-slate-300 mb-3"></i>
+                    <p class="text-sm font-semibold text-slate-500">Tidak ada riwayat pesanan.</p>
                 </div>
-
-                <!-- Item Preview -->
-                <div class="flex items-center gap-4">
-                    <div class="w-16 h-16 rounded-xl bg-slate-100 flex items-center justify-center text-slate-400 text-xl shrink-0">
-                        <i class="fa-solid fa-box"></i>
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <h4 class="text-sm font-bold text-slate-800 truncate">Sepatu Sneaker Urban Ambassador Edition</h4>
-                        <p class="text-xs text-slate-400 mt-0.5">1 Barang x Rp 350.000</p>
-                    </div>
-                    <div class="text-right shrink-0">
-                        <span class="text-xs text-slate-400 block">Total Belanja</span>
-                        <span class="text-sm font-extrabold text-emerald-600">Rp 350.000</span>
-                    </div>
-                </div>
-
-                <!-- Action Footer -->
-                <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
-                    <!-- DIPERBAIKI: Relative Path ke Layanan -->
-                    <a href="../layanan/melacakpesanan.php" class="px-4 py-2 rounded-xl bg-emerald-50 text-emerald-700 text-xs font-bold hover:bg-emerald-100 transition">
-                        Lacak Paket
-                    </a>
-                </div>
-            </div>
-
-            <!-- Empty State Placeholder -->
-            <div class="text-center py-10 bg-white rounded-2xl border border-slate-200">
-                <i class="fa-solid fa-receipt text-3xl text-slate-300 mb-2"></i>
-                <p class="text-xs font-semibold text-slate-500">Tidak ada riwayat pesanan tambahan.</p>
-            </div>
+            <?php endif; ?>
 
         </div>
 

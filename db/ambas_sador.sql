@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 13 Agu 2026 pada 05.54
--- Versi server: 10.4.32-MariaDB
--- Versi PHP: 8.2.12
+-- Generation Time: Aug 17, 2026 at 04:59 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,7 +24,24 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `biodata`
+-- Table structure for table `alamat`
+--
+
+CREATE TABLE `alamat` (
+  `id_alamat` int(11) NOT NULL,
+  `id_users` varchar(50) NOT NULL,
+  `nama_penerima` varchar(100) NOT NULL,
+  `no_telepon` varchar(20) NOT NULL,
+  `alamat_lengkap` text NOT NULL,
+  `kota` varchar(100) NOT NULL,
+  `provinsi` varchar(100) NOT NULL,
+  `kode_pos` varchar(10) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `biodata`
 --
 
 CREATE TABLE `biodata` (
@@ -38,7 +55,7 @@ CREATE TABLE `biodata` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `chat_messages`
+-- Table structure for table `chat_messages`
 --
 
 CREATE TABLE `chat_messages` (
@@ -53,7 +70,7 @@ CREATE TABLE `chat_messages` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `flash_sales`
+-- Table structure for table `flash_sales`
 --
 
 CREATE TABLE `flash_sales` (
@@ -68,7 +85,7 @@ CREATE TABLE `flash_sales` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `flash_sale_items`
+-- Table structure for table `flash_sale_items`
 --
 
 CREATE TABLE `flash_sale_items` (
@@ -84,7 +101,7 @@ CREATE TABLE `flash_sale_items` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `kategori`
+-- Table structure for table `kategori`
 --
 
 CREATE TABLE `kategori` (
@@ -95,7 +112,7 @@ CREATE TABLE `kategori` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `keranjang`
+-- Table structure for table `keranjang`
 --
 
 CREATE TABLE `keranjang` (
@@ -107,23 +124,40 @@ CREATE TABLE `keranjang` (
 
 -- --------------------------------------------------------
 
---
--- Struktur dari tabel `orders`
+--  
+-- Table structure for table `login_otp`
 --
 
-CREATE TABLE `orders` (
-  `id_order` varchar(50) NOT NULL,
+CREATE TABLE `login_otp` (
+  `id` int(11) NOT NULL,
   `id_users` varchar(50) NOT NULL,
-  `total_harga` decimal(12,2) NOT NULL,
-  `metode_pembayaran` varchar(50) NOT NULL,
-  `status_pembayaran` enum('pending','paid','failed','completed') DEFAULT 'pending',
+  `email` varchar(255) NOT NULL,
+  `otp` varchar(255) NOT NULL,
+  `expired_at` datetime NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `order_details`
+-- Table structure for table `orders`
+--
+
+CREATE TABLE `orders` (
+  `id_order` varchar(50) NOT NULL,
+  `id_users` varchar(50) NOT NULL,
+  `id_alamat` int(11) NOT NULL,
+  `total_harga` decimal(12,2) NOT NULL,
+  `metode_pembayaran` varchar(50) NOT NULL,
+  `status_pembayaran` enum('pending','paid','failed','completed') DEFAULT 'pending',
+  `status_pesanan` varchar(30) NOT NULL DEFAULT 'pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `order_details`
 --
 
 CREATE TABLE `order_details` (
@@ -138,7 +172,7 @@ CREATE TABLE `order_details` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `produk`
+-- Table structure for table `produk`
 --
 
 CREATE TABLE `produk` (
@@ -154,7 +188,7 @@ CREATE TABLE `produk` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `rewards`
+-- Table structure for table `rewards`
 --
 
 CREATE TABLE `rewards` (
@@ -166,7 +200,7 @@ CREATE TABLE `rewards` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `userrewards`
+-- Table structure for table `userrewards`
 --
 
 CREATE TABLE `userrewards` (
@@ -179,38 +213,49 @@ CREATE TABLE `userrewards` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `users`
+-- Table structure for table `users`
 --
 
 CREATE TABLE `users` (
   `id_users` varchar(50) NOT NULL,
   `username` varchar(50) NOT NULL,
+  `email` varchar(255) DEFAULT NULL,
   `password` varchar(255) NOT NULL,
   `role` varchar(20) DEFAULT 'customer',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data untuk tabel `users`
+-- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id_users`, `username`, `password`, `role`, `created_at`) VALUES
-('', 'admin', '$2b$10$LuBph9mb/gAg5iaS8Y1yB.LJqUNdmMwTYm4HDJfFOfsTZcaDn12yO', 'customer', '2026-08-12 02:30:01'),
-('1', 'admin', '$2b$10$LuBph9mb/gAg5iaS8Y1yB.LJqUNdmMwTYm4HDJfFOfsTZcaDn12yO', 'customer', '2026-08-12 02:34:04');
+INSERT INTO `users` (`id_users`, `username`, `email`, `password`, `role`, `created_at`) VALUES
+('USR-1786710583-130', 'deihan', NULL, '$2y$10$EOmmJFCd5LkaTVPB5130wekLSCiniW2Wmw7NHyn11H/.nQ736WCLK', 'user', '2026-08-14 12:29:43'),
+('USR-1786768864-359', 'akmal', NULL, '$2y$10$UePguCNcroKV7.UWl48d0O0fEbeSBOsglXc.J4rINCAUhRsROVMnG', 'user', '2026-08-15 04:41:04'),
+('USR-1786795059-267', 'andro', 'bcdiamond73@gmail.com', '$2y$10$OtyVs849KRfh2tHfXtd27ecd.cllEr/Ar8N4K0n6TfmMzwa3feXGu', 'user', '2026-08-15 11:57:39'),
+('USR-1786795246-676', 'farel', 'papananjay281@gmail.com', '$2y$10$5X5JBOrtgr/XtKIIji.k/.VCN4x9.6bsN3LqlMMDWjnJl01Iys59e', 'user', '2026-08-15 12:00:46'),
+('USR-ADMIN-01', 'admin', NULL, '$2y$10$Q37G/G3Gj044R3J9f1u7xXb.e0xVzYc3Z99O/1H.v8/JkP67A1bC2', 'admin', '2026-08-14 12:14:06');
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indeks untuk tabel `biodata`
+-- Indexes for table `alamat`
+--
+ALTER TABLE `alamat`
+  ADD PRIMARY KEY (`id_alamat`),
+  ADD KEY `id_users` (`id_users`);
+
+--
+-- Indexes for table `biodata`
 --
 ALTER TABLE `biodata`
   ADD PRIMARY KEY (`id_bio`),
   ADD KEY `id_users` (`id_users`);
 
 --
--- Indeks untuk tabel `chat_messages`
+-- Indexes for table `chat_messages`
 --
 ALTER TABLE `chat_messages`
   ADD PRIMARY KEY (`id_chat`),
@@ -218,13 +263,13 @@ ALTER TABLE `chat_messages`
   ADD KEY `receiver_id` (`receiver_id`);
 
 --
--- Indeks untuk tabel `flash_sales`
+-- Indexes for table `flash_sales`
 --
 ALTER TABLE `flash_sales`
   ADD PRIMARY KEY (`id_flash_sale`);
 
 --
--- Indeks untuk tabel `flash_sale_items`
+-- Indexes for table `flash_sale_items`
 --
 ALTER TABLE `flash_sale_items`
   ADD PRIMARY KEY (`id_flash_sale_item`),
@@ -232,28 +277,37 @@ ALTER TABLE `flash_sale_items`
   ADD KEY `fk_fs_produk` (`id_produk`);
 
 --
--- Indeks untuk tabel `kategori`
+-- Indexes for table `kategori`
 --
 ALTER TABLE `kategori`
   ADD PRIMARY KEY (`id_kategori`);
 
 --
--- Indeks untuk tabel `keranjang`
+-- Indexes for table `keranjang`
 --
 ALTER TABLE `keranjang`
   ADD PRIMARY KEY (`id_keranjang`),
-  ADD KEY `id_users` (`id_users`),
+  ADD UNIQUE KEY `unique_user_produk` (`id_users`,`id_produk`),
   ADD KEY `id_produk` (`id_produk`);
 
 --
--- Indeks untuk tabel `orders`
+-- Indexes for table `login_otp`
+--
+ALTER TABLE `login_otp`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_id_users` (`id_users`),
+  ADD KEY `idx_email` (`email`);
+
+--
+-- Indexes for table `orders`
 --
 ALTER TABLE `orders`
   ADD PRIMARY KEY (`id_order`),
-  ADD KEY `id_users` (`id_users`);
+  ADD KEY `id_users` (`id_users`),
+  ADD KEY `id_alamat` (`id_alamat`);
 
 --
--- Indeks untuk tabel `order_details`
+-- Indexes for table `order_details`
 --
 ALTER TABLE `order_details`
   ADD PRIMARY KEY (`id_detail`),
@@ -262,20 +316,20 @@ ALTER TABLE `order_details`
   ADD KEY `fk_order_detail_fs` (`id_flash_sale_item`);
 
 --
--- Indeks untuk tabel `produk`
+-- Indexes for table `produk`
 --
 ALTER TABLE `produk`
   ADD PRIMARY KEY (`id_produk`),
   ADD KEY `kategori_id` (`kategori_id`);
 
 --
--- Indeks untuk tabel `rewards`
+-- Indexes for table `rewards`
 --
 ALTER TABLE `rewards`
   ADD PRIMARY KEY (`id_rewards`);
 
 --
--- Indeks untuk tabel `userrewards`
+-- Indexes for table `userrewards`
 --
 ALTER TABLE `userrewards`
   ADD PRIMARY KEY (`id_user_rewards`),
@@ -283,108 +337,134 @@ ALTER TABLE `userrewards`
   ADD KEY `id_rewards` (`id_rewards`);
 
 --
--- Indeks untuk tabel `users`
+-- Indexes for table `users`
 --
 ALTER TABLE `users`
-  ADD PRIMARY KEY (`id_users`);
+  ADD PRIMARY KEY (`id_users`),
+  ADD UNIQUE KEY `unique_email` (`email`);
 
 --
--- AUTO_INCREMENT untuk tabel yang dibuang
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT untuk tabel `biodata`
+-- AUTO_INCREMENT for table `alamat`
+--
+ALTER TABLE `alamat`
+  MODIFY `id_alamat` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `biodata`
 --
 ALTER TABLE `biodata`
   MODIFY `id_bio` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `chat_messages`
+-- AUTO_INCREMENT for table `chat_messages`
 --
 ALTER TABLE `chat_messages`
   MODIFY `id_chat` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `flash_sales`
+-- AUTO_INCREMENT for table `flash_sales`
 --
 ALTER TABLE `flash_sales`
   MODIFY `id_flash_sale` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `flash_sale_items`
+-- AUTO_INCREMENT for table `flash_sale_items`
 --
 ALTER TABLE `flash_sale_items`
   MODIFY `id_flash_sale_item` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `kategori`
+-- AUTO_INCREMENT for table `kategori`
 --
 ALTER TABLE `kategori`
   MODIFY `id_kategori` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `order_details`
+-- AUTO_INCREMENT for table `login_otp`
+--
+ALTER TABLE `login_otp`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+
+--
+-- AUTO_INCREMENT for table `order_details`
 --
 ALTER TABLE `order_details`
   MODIFY `id_detail` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `produk`
+-- AUTO_INCREMENT for table `produk`
 --
 ALTER TABLE `produk`
   MODIFY `id_produk` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `rewards`
+-- AUTO_INCREMENT for table `rewards`
 --
 ALTER TABLE `rewards`
   MODIFY `id_rewards` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `userrewards`
+-- AUTO_INCREMENT for table `userrewards`
 --
 ALTER TABLE `userrewards`
   MODIFY `id_user_rewards` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
+-- Constraints for dumped tables
 --
 
 --
--- Ketidakleluasaan untuk tabel `biodata`
+-- Constraints for table `alamat`
+--
+ALTER TABLE `alamat`
+  ADD CONSTRAINT `alamat_ibfk_1` FOREIGN KEY (`id_users`) REFERENCES `users` (`id_users`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `biodata`
 --
 ALTER TABLE `biodata`
   ADD CONSTRAINT `biodata_ibfk_1` FOREIGN KEY (`id_users`) REFERENCES `users` (`id_users`) ON DELETE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `chat_messages`
+-- Constraints for table `chat_messages`
 --
 ALTER TABLE `chat_messages`
   ADD CONSTRAINT `chat_messages_ibfk_1` FOREIGN KEY (`sender_id`) REFERENCES `users` (`id_users`),
   ADD CONSTRAINT `chat_messages_ibfk_2` FOREIGN KEY (`receiver_id`) REFERENCES `users` (`id_users`);
 
 --
--- Ketidakleluasaan untuk tabel `flash_sale_items`
+-- Constraints for table `flash_sale_items`
 --
 ALTER TABLE `flash_sale_items`
   ADD CONSTRAINT `fk_fs_event` FOREIGN KEY (`id_flash_sale`) REFERENCES `flash_sales` (`id_flash_sale`) ON DELETE CASCADE,
   ADD CONSTRAINT `fk_fs_produk` FOREIGN KEY (`id_produk`) REFERENCES `produk` (`id_produk`) ON DELETE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `keranjang`
+-- Constraints for table `keranjang`
 --
 ALTER TABLE `keranjang`
   ADD CONSTRAINT `keranjang_ibfk_1` FOREIGN KEY (`id_users`) REFERENCES `users` (`id_users`) ON DELETE CASCADE,
   ADD CONSTRAINT `keranjang_ibfk_2` FOREIGN KEY (`id_produk`) REFERENCES `produk` (`id_produk`) ON DELETE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `orders`
+-- Constraints for table `login_otp`
+--
+ALTER TABLE `login_otp`
+  ADD CONSTRAINT `fk_login_otp_users` FOREIGN KEY (`id_users`) REFERENCES `users` (`id_users`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `orders`
 --
 ALTER TABLE `orders`
+  ADD CONSTRAINT `fk_orders_alamat` FOREIGN KEY (`id_alamat`) REFERENCES `alamat` (`id_alamat`) ON UPDATE CASCADE,
   ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`id_users`) REFERENCES `users` (`id_users`);
 
 --
--- Ketidakleluasaan untuk tabel `order_details`
+-- Constraints for table `order_details`
 --
 ALTER TABLE `order_details`
   ADD CONSTRAINT `fk_order_detail_fs` FOREIGN KEY (`id_flash_sale_item`) REFERENCES `flash_sale_items` (`id_flash_sale_item`) ON DELETE SET NULL,
@@ -392,13 +472,13 @@ ALTER TABLE `order_details`
   ADD CONSTRAINT `order_details_ibfk_2` FOREIGN KEY (`id_produk`) REFERENCES `produk` (`id_produk`);
 
 --
--- Ketidakleluasaan untuk tabel `produk`
+-- Constraints for table `produk`
 --
 ALTER TABLE `produk`
   ADD CONSTRAINT `produk_ibfk_1` FOREIGN KEY (`kategori_id`) REFERENCES `kategori` (`id_kategori`);
 
 --
--- Ketidakleluasaan untuk tabel `userrewards`
+-- Constraints for table `userrewards`
 --
 ALTER TABLE `userrewards`
   ADD CONSTRAINT `userrewards_ibfk_1` FOREIGN KEY (`id_users`) REFERENCES `users` (`id_users`) ON DELETE CASCADE,

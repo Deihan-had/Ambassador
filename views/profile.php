@@ -54,7 +54,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']) && !empty($_SESSION[
             <div class="h-16 flex items-center justify-between">
 
                 <!-- Relative Path ke Index Utama -->
-                <a href="../../index.php" class="flex items-center gap-2">
+                <a href="../index.php" class="flex items-center gap-2">
                     <div class="w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center text-white shadow-md">
                         <i class="fa-solid fa-bag-shopping text-xl"></i>
                     </div>
@@ -66,7 +66,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']) && !empty($_SESSION[
                 </a>
 
                 <!-- Relative Path ke Index Utama -->
-                <a href="../../index.php" class="text-xs font-bold text-slate-600 hover:text-emerald-600 flex items-center gap-1.5">
+                <a href="../index.php" class="text-xs font-bold text-slate-600 hover:text-emerald-600 flex items-center gap-1.5">
                     <i class="fa-solid fa-arrow-left"></i>
                     Ke Toko
                 </a>
@@ -99,7 +99,7 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']) && !empty($_SESSION[
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 my-6">
 
                 <!-- Relative Path ke Pesanan Saya -->
-                <a href="../orders/index.php" class="p-4 rounded-2xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/30 transition flex items-center justify-between group">
+                <a href="orders.php" class="p-4 rounded-2xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/30 transition flex items-center justify-between group">
                     <div class="flex items-center gap-3">
                         <div class="w-10 h-10 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center group-hover:bg-emerald-600 group-hover:text-white transition">
                             <i class="fa-solid fa-box-archive"></i>

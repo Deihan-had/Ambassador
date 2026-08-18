@@ -201,7 +201,8 @@ if (!is_string($username) || empty(trim($username))) {
                                         <p class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Akun
                                             Saya</p>
                                         <p class="text-sm font-bold text-slate-800 truncate">
-                                            <?php echo htmlspecialchars($username); ?></p>
+                                            <?php echo htmlspecialchars($username); ?>
+                                        </p>
                                     </div>
 
                                     <a href="views/profile.php"
@@ -505,7 +506,8 @@ if (!is_string($username) || empty(trim($username))) {
             <div class="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50">
                 <div class="flex items-center gap-2">
                     <i class="fa-solid fa-bag-shopping text-emerald-600 text-lg"></i>
-                    <h3 class="font-bold text-slate-800">Keranjang Belanja</h3>
+                    <h3 class="font-bold text-slate-800"><button onclick="addToCart(1)">Tambah ke Keranjang</button>
+                    </h3>
                     <span id="cartHeaderBadge"
                         class="bg-emerald-100 text-emerald-700 text-xs font-bold px-2 py-0.5 rounded-full">0</span>
                 </div>
@@ -529,13 +531,14 @@ if (!is_string($username) || empty(trim($username))) {
                     <div class="flex justify-between text-slate-600"><span>Estimasi Ongkir</span><span id="cartShipping"
                             class="text-slate-800 font-medium">Gratis</span></div>
                     <div class="flex justify-between text-base font-bold text-slate-900 pt-2 border-t border-slate-200">
-                        <span>Total Bayar</span><span id="cartTotal" class="text-emerald-600">Rp 0</span></div>
+                        <span>Total Bayar</span><span id="cartTotal" class="text-emerald-600">Rp 0</span>
+                    </div>
                 </div>
-                <button id="checkoutBtn"
+                <id="checkoutBtn"
                     onclick="<?php echo $isLoggedIn ? 'openCheckout()' : "window.location.href='/views/auth/login.php'"; ?>"
                     class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2">
                     Proses Pembayaran <i class="fa-solid fa-arrow-right text-xs"></i>
-                </button>
+                    </button>
             </div>
         </div>
     </div>
@@ -572,7 +575,7 @@ if (!is_string($username) || empty(trim($username))) {
         </div>
     </div>
 
-    <!-- Checkout Modal -->
+    <!-- checkout modal -->
     <div id="checkoutModal"
         class="fixed inset-0 z-50 invisible transition-all duration-300 flex items-center justify-center p-4">
         <div id="checkoutBackdrop" onclick="closeCheckout()"
@@ -605,26 +608,6 @@ if (!is_string($username) || empty(trim($username))) {
                         placeholder="Jl. Sudirman No. 123, Jakarta"
                         class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-emerald-500"></textarea>
                 </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Metode Pembayaran</label>
-                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                        <label
-                            class="border border-slate-200 p-3 rounded-xl flex items-center gap-2 cursor-pointer hover:border-emerald-500">
-                            <input type="radio" name="payment" value="qris" checked class="accent-emerald-600"><span
-                                class="text-xs font-bold">QRIS Instant</span>
-                        </label>
-                        <label
-                            class="border border-slate-200 p-3 rounded-xl flex items-center gap-2 cursor-pointer hover:border-emerald-500">
-                            <input type="radio" name="payment" value="bank" class="accent-emerald-600"><span
-                                class="text-xs font-bold">Transfer BCA/Mandiri</span>
-                        </label>
-                        <label
-                            class="border border-slate-200 p-3 rounded-xl flex items-center gap-2 cursor-pointer hover:border-emerald-500">
-                            <input type="radio" name="payment" value="cod" class="accent-emerald-600"><span
-                                class="text-xs font-bold">COD (Bayar Tempat)</span>
-                        </label>
-                    </div>
-                </div>
                 <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2 text-sm">
                     <div class="flex justify-between font-bold text-slate-800">
                         <span>Total Biaya Pesanan:</span><span id="checkoutTotal" class="text-emerald-600">Rp 0</span>
@@ -638,7 +621,7 @@ if (!is_string($username) || empty(trim($username))) {
         </div>
     </div>
 
-    <!-- Pesanan Berhasil Modal -->
+    <!-- pesanan berhasil modal -->
     <div id="successModal"
         class="fixed inset-0 z-50 invisible transition-all duration-300 flex items-center justify-center p-4">
         <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-xs"></div>
@@ -649,7 +632,14 @@ if (!is_string($username) || empty(trim($username))) {
             </div>
             <h3 class="text-2xl font-bold text-slate-800">Pesanan Berhasil!</h3>
             <p class="text-sm text-slate-600">Terima kasih telah berbelanja di Ambassador. Nomor Invoice Anda adalah
-                <span id="invoiceNumber" class="font-mono font-bold text-slate-900">#INV-89123</span>.</p>
+                <span id="invoiceNumber" class="font-mono font-bold text-slate-900">#INV-89123</span>.
+            </p>
+            <button
+                class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-xl">
+                <a
+                    href="/webdesign/midtrans/midtrans-php-native/vendor/veritrans/veritrans-php/examples/snap/checkout-process-simple-version.php">Checkout
+                    Now</a>
+            </button>
             <button onclick="closeSuccessModal()"
                 class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-xl">
                 Kembali ke Beranda
@@ -657,14 +647,14 @@ if (!is_string($username) || empty(trim($username))) {
         </div>
     </div>
 
-    <!-- Toast -->
+    <!-- toast atau pesan pop up kecil -->
     <div id="toast"
         class="fixed bottom-5 right-5 z-50 hidden toast-slide-in bg-slate-900 text-white px-4 py-3 rounded-xl shadow-xl flex items-center gap-3 border border-slate-700">
         <i id="toastIcon" class="fa-solid fa-circle-info text-emerald-400 text-lg"></i>
         <span id="toastMessage" class="text-sm font-medium">Notifikasi</span>
     </div>
 
-    <!-- Footer -->
+    <!-- footer -->
     <footer class="bg-slate-900 text-slate-400 text-sm mt-16 border-t border-slate-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 grid grid-cols-1 md:grid-cols-4 gap-8">
             <div class="space-y-3">
@@ -736,10 +726,11 @@ if (!is_string($username) || empty(trim($username))) {
 
         <div class="border-t border-slate-800 py-4 text-center text-xs text-slate-500">
             © 2026 Ambassador Inc. Seluruh hak cipta dilindungi undang-undang.
+
         </div>
     </footer>
 
-    <!-- Data Login -->
+    <!-- data login -->
     <script>
         const isLoggedIn = <?php echo $isLoggedIn ? 'true' : 'false'; ?>;
         const currentUserId = <?php echo $user_id ? json_encode($user_id) : 'null'; ?>;
@@ -782,7 +773,7 @@ if (!is_string($username) || empty(trim($username))) {
             }
         });
 
-        /* MANAJEMEN MODAL LAYANAN */
+        /* manajemen modal layanan */
         function openLayananModal(type) {
             const modal = document.getElementById('layananModal');
             const backdrop = document.getElementById('layananBackdrop');
@@ -867,14 +858,61 @@ if (!is_string($username) || empty(trim($username))) {
                 }
             }
         }
-    </script>
 
+        // Path Midtrans checkout, relatif dari index.php (root).
+        // Sesuaikan lagi kalau lokasi foldernya berubah.
+        const MIDTRANS_CHECKOUT_PATH = "midtrans/midtrans-php-native/vendor/veritrans/veritrans-php/examples/snap/checkout-process-simple-version.php";
+
+        // Alias, kalau ada bagian lain (mis. js/checkout.js) yang
+        // masih memanggil nama fungsi lama ini.
+        // Variabel sementara untuk menampung keranjang saat order dibuat
+        let pendingCheckoutCart = [];
+
+        // Simpan satu versi fungsi checkoutnow() ini saja di index.php
+        // Simpan satu versi fungsi checkoutnow() ini saja di index.php
+        function checkoutnow() {
+            const modal = document.getElementById("successModal");
+
+            // 1. Ambil data barang dari pendingCheckoutCart (setelah form modal diisi) 
+            // ATAU dari cart/localStorage jika dipanggil langsung
+            let cartToCheckout = (typeof pendingCheckoutCart !== 'undefined' && pendingCheckoutCart.length > 0)
+                ? pendingCheckoutCart
+                : (typeof cart !== 'undefined' && cart.length > 0 ? cart : JSON.parse(localStorage.getItem('cart')) || []);
+
+            if (cartToCheckout.length === 0) {
+                alert("Keranjang belanja Anda kosong!");
+                return;
+            }
+
+            // 2. Kirim data keranjang aktual ke session PHP
+            fetch('save_cart_session.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ cart: cartToCheckout })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        if (modal) modal.classList.add("invisible");
+                        // Redirect ke Midtrans
+                        window.location.href = MIDTRANS_CHECKOUT_PATH;
+                    } else {
+                        alert("Gagal menyiapkan checkout. Silakan coba lagi.");
+                    }
+                })
+                .catch(err => {
+                    console.error('Checkout error:', err);
+                    alert("Terjadi kesalahan koneksi. Silakan coba lagi.");
+                });
+        }
+
+    </script>
     <!-- File JS -->
     <script src="js/data.js"></script>
+    <script src="js/cart.js"></script>
     <script src="js/state.js"></script>
     <script src="js/ui.js"></script>
     <script src="js/produk.js"></script>
-    <script src="js/cart.js"></script>
     <script src="js/wishlist.js"></script>
     <script src="js/checkout.js"></script>
     <script src="js/app.js"></script>

@@ -5,6 +5,11 @@ $user = "root";
 $pass = "";
 $db_name = "ambas_sador";
 
+$username = "root";
+$password = "";
+$database = "simbayar";
+$koneksi = mysqli_connect($host, $username, $password, $database);
+
 $con = mysqli_connect($host, $user, $pass, $db_name);
 
 // kalo gagal connect langsung stop aja
