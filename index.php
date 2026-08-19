@@ -22,7 +22,6 @@ if (isset($_SESSION['user'])) {
     $isLoggedIn = true;
 
     if (is_array($_SESSION['user'])) {
-        // Jika $_SESSION['user'] berbentuk Array
         if (!empty($_SESSION['user']['username'])) {
             $username = $_SESSION['user']['username'];
         } elseif (!empty($_SESSION['user']['nama'])) {
@@ -37,7 +36,6 @@ if (isset($_SESSION['user'])) {
             $user_id = $_SESSION['user']['id'];
         }
     } elseif (is_string($_SESSION['user'])) {
-        // Jika $_SESSION['user'] disimpan berupa string biasa
         $username = $_SESSION['user'];
     }
 }
@@ -47,7 +45,6 @@ if (isset($_SESSION['username']) && is_string($_SESSION['username'])) {
     $isLoggedIn = true;
 }
 
-// Memastikan $username adalah String & Tidak Kosong
 if (!is_string($username) || empty(trim($username))) {
     $username = 'Pengguna';
 }
@@ -59,9 +56,7 @@ if (!is_string($username) || empty(trim($username))) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Ambassador - Toko Online</title>
-
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
@@ -89,7 +84,7 @@ if (!is_string($username) || empty(trim($username))) {
     </style>
 </head>
 
-<body class="bg-slate-50 text-slate-800 flex-col min-h-screen">
+<body class="bg-slate-50 text-slate-800 flex flex-col min-h-screen">
 
     <!-- Promo Topbar -->
     <div class="bg-slate-900 text-white text-xs py-2 px-6 text-center flex justify-between items-center">
@@ -140,10 +135,8 @@ if (!is_string($username) || empty(trim($username))) {
                         <input type="text" id="searchInput" oninput="handleSearch()"
                             placeholder="Cari gadget, fashion, aksesori..."
                             class="w-full pl-10 pr-10 py-2.5 bg-slate-100 hover:bg-slate-200/70 focus:bg-white text-sm rounded-full border border-transparent focus:border-emerald-500 focus:outline-none transition-all duration-200 shadow-inner">
-
                         <i
                             class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
-
                         <button id="clearSearch" onclick="clearSearch()"
                             class="hidden absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
                             <i class="fa-solid fa-xmark"></i>
@@ -153,9 +146,9 @@ if (!is_string($username) || empty(trim($username))) {
 
                 <!-- Tombol Kanan -->
                 <div class="flex items-center gap-2 sm:gap-3">
-
                     <!-- Wishlist -->
-                    <button onclick="toggleWishlistModal()"
+                    <button
+                        onclick="<?php echo $isLoggedIn ? 'toggleWishlistModal()' : "window.location.href='views/auth/login.php'"; ?>"
                         class="relative p-2.5 text-slate-600 hover:text-red-500 hover:bg-slate-100 rounded-full transition-colors"
                         title="Wishlist">
                         <i class="fa-regular fa-heart text-xl"></i>
@@ -165,10 +158,10 @@ if (!is_string($username) || empty(trim($username))) {
                         </span>
                     </button>
 
-                    <!-- Keranjang -->
+                    <!-- Keranjang Header -->
                     <button
-                        onclick="<?php echo $isLoggedIn ? 'toggleCartModal()' : "window.location.href='/views/auth/login.php'"; ?>"
-                        class="relative p-2.5 bg-slate-900 text-white hover:bg-emerald-600 rounded-full shadow-md transition-all duration-200 flex items-center justify-center"
+                        onclick="<?php echo $isLoggedIn ? 'toggleCartModal()' : "window.location.href='views/auth/login.php'"; ?>"
+                        class="relative p-2.5 bg-slate-900 text-white hover:bg-emerald-600 rounded-full shadow-md transition-all duration-200 flex items-center justify-center cursor-pointer"
                         title="Keranjang">
                         <i class="fa-solid fa-cart-shopping text-lg"></i>
                         <span id="cartCount"
@@ -204,24 +197,28 @@ if (!is_string($username) || empty(trim($username))) {
                                             <?php echo htmlspecialchars($username); ?>
                                         </p>
                                     </div>
-
                                     <a href="views/profile.php"
                                         class="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50">
                                         <i class="fa-regular fa-user text-slate-400 w-4"></i><span>Profil Saya</span>
                                     </a>
-
                                     <a href="views/orders.php"
                                         class="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50">
                                         <i class="fa-solid fa-box-archive text-slate-400 w-4"></i><span>Pesanan Saya</span>
                                     </a>
-
                                     <a href="views/rewards/index.php"
                                         class="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50">
                                         <i class="fa-solid fa-gift text-slate-400 w-4"></i><span>Rewards Card</span>
                                     </a>
 
+                                    <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true): ?>
+                                        <a href="/webdesign/ambassador-admin/index.php"
+                                            class="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50">
+                                            <i class="fa-solid fa-gauge-high text-emerald-600 w-4"></i>
+                                            <span>Dashboard Admin</span>
+                                        </a>
+                                    <?php endif; ?>
+                                    
                                     <div class="border-t border-slate-100 my-1"></div>
-
                                     <a href="logout.php"
                                         class="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-red-600 hover:bg-red-50">
                                         <i class="fa-solid fa-right-from-bracket text-red-500 w-4"></i><span>Keluar
@@ -235,15 +232,19 @@ if (!is_string($username) || empty(trim($username))) {
                                 <i class="fa-regular fa-user text-sm"></i>
                                 <span class="hidden sm:inline">Sign In</span>
                             </a>
-
                             <a href="views/auth/register.php"
                                 class="text-xs sm:text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 px-3.5 py-2 rounded-xl shadow-md flex items-center gap-1.5">
                                 <i class="fa-solid fa-user-plus text-xs"></i>
                                 <span>Sign Up</span>
                             </a>
+                            <a href="views/auth/admin.php"
+                                class="text-xs sm:text-sm font-semibold text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 border border-slate-300 px-3.5 py-2 rounded-xl transition-all flex items-center gap-1.5"
+                                title="Portal Akses Admin">
+                                <i class="fa-solid fa-user-shield text-emerald-600 text-xs"></i>
+                                <span>Admin</span>
+                            </a>
                         <?php } ?>
                     </div>
-
                 </div>
             </div>
 
@@ -280,7 +281,7 @@ if (!is_string($username) || empty(trim($username))) {
                     dengan garansi resmi dan bebas biaya kirim.
                 </p>
                 <div class="pt-2 flex flex-wrap justify-center md:justify-start gap-3">
-                    <a href="#productGrid"
+                    <a href="<?php echo $isLoggedIn ? '#productGrid' : 'views/auth/login.php'; ?>"
                         class="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold px-6 py-3 rounded-xl shadow-lg transition-all text-sm flex items-center gap-2">
                         Belanja Sekarang <i class="fa-solid fa-arrow-right text-xs"></i>
                     </a>
@@ -360,7 +361,7 @@ if (!is_string($username) || empty(trim($username))) {
         </div>
     </main>
 
-    <!-- MODAL INTEGRASI LAYANAN -->
+    <!-- MODAL INTEGRASI LAYANAN (Pusat Bantuan, Cara Pembelian, Kebijakan Garansi) -->
     <div id="layananModal"
         class="fixed inset-0 z-50 invisible transition-all duration-300 flex items-center justify-center p-3 sm:p-6">
         <div id="layananBackdrop" onclick="closeLayananModal()"
@@ -492,29 +493,31 @@ if (!is_string($username) || empty(trim($username))) {
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 
-    <!-- Modals Keranjang, Product, Wishlist, Checkout, Success, Toast -->
+    <!-- Modal Keranjang -->
     <div id="cartModal" class="fixed inset-0 z-50 invisible transition-all duration-300">
         <div id="cartBackdrop"
-            onclick="<?php echo $isLoggedIn ? 'toggleCartModal()' : "window.location.href='/views/auth/login.php'"; ?>"
+            onclick="<?php echo $isLoggedIn ? 'toggleCartModal()' : "window.location.href='views/auth/login.php'"; ?>"
             class="absolute inset-0 bg-slate-900/50 backdrop-blur-xs opacity-0 transition-opacity duration-300"></div>
+
         <div id="cartPanel"
             class="absolute right-0 top-0 bottom-0 w-full max-w-md bg-white shadow-2xl transform translate-x-full transition-transform duration-300 flex flex-col">
             <div class="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50">
                 <div class="flex items-center gap-2">
                     <i class="fa-solid fa-bag-shopping text-emerald-600 text-lg"></i>
-                    <h3 class="font-bold text-slate-800"><button onclick="addToCart(1)">Tambah ke Keranjang</button>
-                    </h3>
+                    <h3 class="font-bold text-slate-800">Keranjang Belanja</h3>
                     <span id="cartHeaderBadge"
                         class="bg-emerald-100 text-emerald-700 text-xs font-bold px-2 py-0.5 rounded-full">0</span>
                 </div>
-                <button onclick="toggleCartModal()" class="text-slate-400 hover:text-slate-600 p-2 rounded-lg"><i
-                        class="fa-solid fa-xmark text-lg"></i></button>
+                <button onclick="toggleCartModal()" class="text-slate-400 hover:text-slate-600 p-2 rounded-lg">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
             </div>
+
             <div id="cartItemsContainer" class="flex-1 overflow-y-auto p-4 space-y-4"></div>
+
             <div class="p-4 border-t border-slate-100 bg-slate-50 space-y-3">
                 <div class="flex gap-2">
                     <input type="text" id="promoInput" placeholder="Kode Promo (mis. AMBASDISKON)"
@@ -523,6 +526,7 @@ if (!is_string($username) || empty(trim($username))) {
                         class="bg-slate-800 hover:bg-slate-900 text-white text-sm font-semibold px-4 py-2 rounded-lg">Gunakan</button>
                 </div>
                 <div id="promoMessage" class="hidden text-xs font-medium"></div>
+
                 <div class="space-y-1.5 text-sm pt-2 border-t border-slate-200">
                     <div class="flex justify-between text-slate-600"><span>Subtotal</span><span id="cartSubtotal">Rp
                             0</span></div>
@@ -534,11 +538,12 @@ if (!is_string($username) || empty(trim($username))) {
                         <span>Total Bayar</span><span id="cartTotal" class="text-emerald-600">Rp 0</span>
                     </div>
                 </div>
-                <id="checkoutBtn"
-                    onclick="<?php echo $isLoggedIn ? 'openCheckout()' : "window.location.href='/views/auth/login.php'"; ?>"
-                    class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2">
+
+                <button id="checkoutBtn"
+                    onclick="<?php echo $isLoggedIn ? 'goToCheckout()' : "window.location.href='views/auth/login.php'"; ?>"
+                    class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer">
                     Proses Pembayaran <i class="fa-solid fa-arrow-right text-xs"></i>
-                    </button>
+                </button>
             </div>
         </div>
     </div>
@@ -575,86 +580,14 @@ if (!is_string($username) || empty(trim($username))) {
         </div>
     </div>
 
-    <!-- checkout modal -->
-    <div id="checkoutModal"
-        class="fixed inset-0 z-50 invisible transition-all duration-300 flex items-center justify-center p-4">
-        <div id="checkoutBackdrop" onclick="closeCheckout()"
-            class="absolute inset-0 bg-slate-900/60 backdrop-blur-xs opacity-0 transition-opacity"></div>
-        <div id="checkoutPanel"
-            class="relative bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl opacity-0 scale-95 transition-all duration-300 z-10 p-6">
-            <div class="flex items-center justify-between pb-4 border-b border-slate-200">
-                <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
-                    <i class="fa-solid fa-credit-card text-emerald-600"></i> Pengiriman & Pembayaran
-                </h3>
-                <button onclick="closeCheckout()" class="text-slate-400 hover:text-slate-600"><i
-                        class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
-            <form id="checkoutForm" onsubmit="handlePlaceOrder(event)" class="mt-4 space-y-4">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Lengkap *</label>
-                        <input type="text" id="checkoutName" name="name" required placeholder="Ahmad Subagja"
-                            class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-emerald-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Nomor WhatsApp/HP *</label>
-                        <input type="tel" id="checkoutPhone" name="phone" required placeholder="081234567890"
-                            class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-emerald-500">
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Alamat Lengkap *</label>
-                    <textarea id="checkoutAddress" name="address" required rows="2"
-                        placeholder="Jl. Sudirman No. 123, Jakarta"
-                        class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-emerald-500"></textarea>
-                </div>
-                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2 text-sm">
-                    <div class="flex justify-between font-bold text-slate-800">
-                        <span>Total Biaya Pesanan:</span><span id="checkoutTotal" class="text-emerald-600">Rp 0</span>
-                    </div>
-                </div>
-                <button type="submit"
-                    class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow-lg transition-all">
-                    Buat Pesanan Sekarang
-                </button>
-            </form>
-        </div>
-    </div>
-
-    <!-- pesanan berhasil modal -->
-    <div id="successModal"
-        class="fixed inset-0 z-50 invisible transition-all duration-300 flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-xs"></div>
-        <div class="relative bg-white rounded-2xl max-w-md w-full p-6 text-center shadow-2xl z-10 space-y-4">
-            <div
-                class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-3xl">
-                <i class="fa-solid fa-circle-check"></i>
-            </div>
-            <h3 class="text-2xl font-bold text-slate-800">Pesanan Berhasil!</h3>
-            <p class="text-sm text-slate-600">Terima kasih telah berbelanja di Ambassador. Nomor Invoice Anda adalah
-                <span id="invoiceNumber" class="font-mono font-bold text-slate-900">#INV-89123</span>.
-            </p>
-            <button
-                class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-xl">
-                <a
-                    href="/webdesign/midtrans/midtrans-php-native/vendor/veritrans/veritrans-php/examples/snap/checkout-process-simple-version.php">Checkout
-                    Now</a>
-            </button>
-            <button onclick="closeSuccessModal()"
-                class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-xl">
-                Kembali ke Beranda
-            </button>
-        </div>
-    </div>
-
-    <!-- toast atau pesan pop up kecil -->
+    <!-- Toast Notification -->
     <div id="toast"
         class="fixed bottom-5 right-5 z-50 hidden toast-slide-in bg-slate-900 text-white px-4 py-3 rounded-xl shadow-xl flex items-center gap-3 border border-slate-700">
         <i id="toastIcon" class="fa-solid fa-circle-info text-emerald-400 text-lg"></i>
         <span id="toastMessage" class="text-sm font-medium">Notifikasi</span>
     </div>
 
-    <!-- footer -->
+    <!-- Footer Lengkap -->
     <footer class="bg-slate-900 text-slate-400 text-sm mt-16 border-t border-slate-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 grid grid-cols-1 md:grid-cols-4 gap-8">
             <div class="space-y-3">
@@ -675,25 +608,22 @@ if (!is_string($username) || empty(trim($username))) {
                 <h4 class="text-white font-semibold mb-3">Layanan Pelanggan</h4>
                 <ul class="space-y-2 text-xs">
                     <li>
-                        <a href="/views/layanan/pusatbantuan.php"
-                            onclick="event.preventDefault(); openLayananModal('pusatbantuan');"
+                        <button onclick="event.preventDefault(); openLayananModal('pusatbantuan');"
                             class="hover:text-white">
                             Pusat Bantuan
-                        </a>
+                        </button>
                     </li>
                     <li>
-                        <a href="/views/layanan/carapembelian.php"
-                            onclick="event.preventDefault(); openLayananModal('carapembelian');"
+                        <button onclick="event.preventDefault(); openLayananModal('carapembelian');"
                             class="hover:text-white">
                             Cara Pembelian
-                        </a>
+                        </button>
                     </li>
                     <li>
-                        <a href="/views/layanan/kebijakangaransi.php"
-                            onclick="event.preventDefault(); openLayananModal('kebijakangaransi');"
+                        <button onclick="event.preventDefault(); openLayananModal('kebijakangaransi');"
                             class="hover:text-white">
                             Kebijakan Garansi
-                        </a>
+                        </button>
                     </li>
                 </ul>
             </div>
@@ -726,54 +656,20 @@ if (!is_string($username) || empty(trim($username))) {
 
         <div class="border-t border-slate-800 py-4 text-center text-xs text-slate-500">
             © 2026 Ambassador Inc. Seluruh hak cipta dilindungi undang-undang.
-
         </div>
     </footer>
 
-    <!-- data login -->
+    <!-- JS Variables Init & Helper Functions -->
     <script>
         const isLoggedIn = <?php echo $isLoggedIn ? 'true' : 'false'; ?>;
         const currentUserId = <?php echo $user_id ? json_encode($user_id) : 'null'; ?>;
 
-        document.addEventListener('click', function (e) {
-            if (isLoggedIn) {
-                return;
-            }
-
-            let tombol = e.target.closest('button');
-            if (!tombol) {
-                return;
-            }
-
-            let teks = tombol.innerText.trim().toLowerCase();
-
-            if (teks.includes('keranjang') || teks.includes('beli sekarang')) {
-                e.preventDefault();
-                e.stopPropagation();
-                e.stopImmediatePropagation();
-
-                window.location.href = '/views/auth/login.php';
-                return;
-            }
-        }, true);
-
         function toggleUserDropdown() {
             const dropdown = document.getElementById('userDropdown');
-            if (dropdown) {
-                dropdown.classList.toggle('hidden');
-            }
+            if (dropdown) dropdown.classList.toggle('hidden');
         }
 
-        document.addEventListener('click', function (e) {
-            const container = document.getElementById('userMenuContainer');
-            const dropdown = document.getElementById('userDropdown');
-
-            if (container && dropdown && !container.contains(e.target)) {
-                dropdown.classList.add('hidden');
-            }
-        });
-
-        /* manajemen modal layanan */
+        /* Manajemen Modal Layanan (Pusat Bantuan, Cara Pembelian, Kebijakan Garansi) */
         function openLayananModal(type) {
             const modal = document.getElementById('layananModal');
             const backdrop = document.getElementById('layananBackdrop');
@@ -796,7 +692,6 @@ if (!is_string($username) || empty(trim($username))) {
             }
 
             modal.classList.remove('invisible');
-
             setTimeout(() => {
                 backdrop.classList.remove('opacity-0');
                 panel.classList.remove('opacity-0', 'scale-95');
@@ -822,7 +717,6 @@ if (!is_string($username) || empty(trim($username))) {
 
             items.forEach(item => {
                 const search = item.getAttribute('data-search').toLowerCase();
-
                 if (search.includes(input) || input === '') {
                     item.classList.remove('hidden');
                 } else {
@@ -833,25 +727,20 @@ if (!is_string($username) || empty(trim($username))) {
 
         function toggleModalFaq(button) {
             const item = button.closest('.faq-item');
-
             document.querySelectorAll('#modalFaqList .faq-item.active').forEach(activeItem => {
                 if (activeItem !== item) {
                     activeItem.classList.remove('active');
                 }
             });
-
             item.classList.toggle('active');
         }
 
         function applyPromoQuick(code) {
             if (typeof toggleCartModal === 'function') {
                 toggleCartModal();
-
                 const promoInput = document.getElementById('promoInput');
-
                 if (promoInput) {
                     promoInput.value = code;
-
                     if (typeof applyPromoCode === 'function') {
                         applyPromoCode();
                     }
@@ -859,64 +748,28 @@ if (!is_string($username) || empty(trim($username))) {
             }
         }
 
-        // Path Midtrans checkout, relatif dari index.php (root).
-        // Sesuaikan lagi kalau lokasi foldernya berubah.
-        const MIDTRANS_CHECKOUT_PATH = "midtrans/midtrans-php-native/vendor/veritrans/veritrans-php/examples/snap/checkout-process-simple-version.php";
-
-        // Alias, kalau ada bagian lain (mis. js/checkout.js) yang
-        // masih memanggil nama fungsi lama ini.
-        // Variabel sementara untuk menampung keranjang saat order dibuat
-        let pendingCheckoutCart = [];
-
-        // Simpan satu versi fungsi checkoutnow() ini saja di index.php
-        // Simpan satu versi fungsi checkoutnow() ini saja di index.php
-        function checkoutnow() {
-            const modal = document.getElementById("successModal");
-
-            // 1. Ambil data barang dari pendingCheckoutCart (setelah form modal diisi) 
-            // ATAU dari cart/localStorage jika dipanggil langsung
-            let cartToCheckout = (typeof pendingCheckoutCart !== 'undefined' && pendingCheckoutCart.length > 0)
-                ? pendingCheckoutCart
-                : (typeof cart !== 'undefined' && cart.length > 0 ? cart : JSON.parse(localStorage.getItem('cart')) || []);
-
-            if (cartToCheckout.length === 0) {
-                alert("Keranjang belanja Anda kosong!");
-                return;
+        // Interceptor Global untuk Elemen Dinamis (Produk Card / Modal)
+        document.addEventListener('click', function (e) {
+            if (!isLoggedIn) {
+                const buyOrCartBtn = e.target.closest('[onclick*="addToCart"], [onclick*="buyNow"], [onclick*="toggleCartModal"], .btn-buy, .btn-cart');
+                if (buyOrCartBtn) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    window.location.href = 'views/auth/login.php';
+                }
             }
-
-            // 2. Kirim data keranjang aktual ke session PHP
-            fetch('save_cart_session.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ cart: cartToCheckout })
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        if (modal) modal.classList.add("invisible");
-                        // Redirect ke Midtrans
-                        window.location.href = MIDTRANS_CHECKOUT_PATH;
-                    } else {
-                        alert("Gagal menyiapkan checkout. Silakan coba lagi.");
-                    }
-                })
-                .catch(err => {
-                    console.error('Checkout error:', err);
-                    alert("Terjadi kesalahan koneksi. Silakan coba lagi.");
-                });
-        }
-
+        }, true);
     </script>
-    <!-- File JS -->
+
+    <!-- File JS Utama -->
     <script src="js/data.js"></script>
-    <script src="js/cart.js"></script>
     <script src="js/state.js"></script>
     <script src="js/ui.js"></script>
-    <script src="js/produk.js"></script>
+    <script src="js/cart.js"></script>
     <script src="js/wishlist.js"></script>
+    <script src="js/produk.js"></script>
     <script src="js/checkout.js"></script>
     <script src="js/app.js"></script>
-
 </body>
 
 </html>

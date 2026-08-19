@@ -9,25 +9,23 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
 /* ---------------------------------------------------------
- * Admin-configurable settings (would live in an admin panel / config table)
+ * PENGATURAN / KONFIGURASI
  * --------------------------------------------------------- */
 const POINT_RATE          = 500000; // Rp per point
 const POINTS_TO_FULL_CARD = 10;
-const CARD_CATEGORY_FILTER = 'fashion'; // set to null to accept all categories
+const CARD_CATEGORY_FILTER = 'fashion'; // null jika ingin semua kategori
 
 $REWARD_CONFIG = [
-    'type'        => 'discount', // discount | physical | credit
-    'label'       => 'Diskon 20% + Free Ongkir',
-    'description' => 'Nikmati potongan 20% dan gratis ongkir untuk transaksi berikutnya.',
-    // used only when type === 'discount'
+    'type'                  => 'discount', // discount | physical | credit
+    'label'                 => 'Diskon 20% + Free Ongkir',
+    'description'           => 'Nikmati potongan 20% dan gratis ongkir untuk transaksi berikutnya.',
     'discount_code_prefix'  => 'REWARD',
     'discount_valid_days'   => 30,
-    // used only when type === 'credit'
     'credit_amount'         => 100000,
 ];
 
 /* ---------------------------------------------------------
- * Auth guard — same session convention as index.php
+ * CEK LOGIN / AUTH GUARD
  * --------------------------------------------------------- */
 function current_user_id()
 {
@@ -50,7 +48,7 @@ if (!$user_id) {
 }
 
 /* ---------------------------------------------------------
- * Storage layer (JSON file standing in for `user_rewards` table)
+ * CLASS PENYIMPANAN DATA (JSON)
  * --------------------------------------------------------- */
 class Store
 {
@@ -72,7 +70,7 @@ class Store
         if (!is_dir($dir)) {
             mkdir($dir, 0775, true);
         }
-        // simple lock to avoid concurrent-write corruption
+
         $fp = fopen(self::$path, 'c+');
         if ($fp) {
             flock($fp, LOCK_EX);
@@ -112,14 +110,14 @@ class Store
             'reward_code'           => null,
             'claimed_at'            => null,
             'reset_count'           => 0,
-            'points_history'        => [],  // [{date, order_no, amount, points, status}]
-            'rewards_history'       => [],  // [{full_date, reward, claimed_at, status}]
+            'points_history'        => [],
+            'rewards_history'       => [],
         ];
     }
 }
 
 /* ---------------------------------------------------------
- * Helpers
+ * FUNGSI BANTU (HELPER)
  * --------------------------------------------------------- */
 function respond(array $payload, int $code = 200): void
 {
@@ -130,7 +128,6 @@ function respond(array $payload, int $code = 200): void
 
 function card_view(array $card): array
 {
-    // Shape returned to the frontend (adds a couple of derived/display fields)
     global $REWARD_CONFIG;
 
     $rewardMeta = $card['reward_type']
@@ -179,7 +176,7 @@ function generate_discount_code(): string
 }
 
 /* ---------------------------------------------------------
- * Routing
+ * PROSES ROUTING / AKSI
  * --------------------------------------------------------- */
 $method = $_SERVER['REQUEST_METHOD'];
 $action = $_GET['action'] ?? ($_POST['action'] ?? null);
@@ -212,24 +209,22 @@ function do_calculate(array $card, string $userId, float $orderTotal, string $or
     }
 
     if ($card['card_status'] === 'full') {
-        // Card is already full and waiting to be claimed — spec doesn't carry
-        // points into a not-yet-started new card, so we hold the earn until claim.
         return ['success' => true, 'data' => card_view($card), 'points_earned' => 0, 'message' => 'Card sudah penuh, klaim reward Anda dahulu sebelum poin baru dapat dikumpulkan.'];
     }
 
     $pointsEarned = (int) floor($orderTotal / POINT_RATE);
     $remainingSlots = POINTS_TO_FULL_CARD - $card['current_points'];
-    $pointsApplied = min($pointsEarned, $remainingSlots); // extra points beyond 10/10 are forfeited per spec
+    $pointsApplied = min($pointsEarned, $remainingSlots);
 
     $card['current_points']        += $pointsApplied;
     $card['total_lifetime_points'] += $pointsApplied;
 
     $card['points_history'][] = [
-        'date'    => date('Y-m-d H:i:s'),
+        'date'     => date('Y-m-d H:i:s'),
         'order_no' => $orderNo,
-        'amount'  => $orderTotal,
-        'points'  => $pointsApplied,
-        'status'  => 'Berhasil',
+        'amount'   => $orderTotal,
+        'points'   => $pointsApplied,
+        'status'   => 'Berhasil',
     ];
 
     if ($card['current_points'] >= POINTS_TO_FULL_CARD) {
@@ -240,15 +235,14 @@ function do_calculate(array $card, string $userId, float $orderTotal, string $or
     Store::saveUserCard($userId, $card);
 
     return [
-        'success' => true,
-        'data' => card_view($card),
-        'points_earned' => $pointsApplied,
+        'success'          => true,
+        'data'             => card_view($card),
+        'points_earned'    => $pointsApplied,
         'points_forfeited' => max(0, $pointsEarned - $pointsApplied),
     ];
 }
 
 if ($method === 'POST' && $action === 'calculate') {
-    // Real integration point: call this from ON payment_success in the order flow.
     $orderTotal    = (float) ($_POST['order_total'] ?? 0);
     $orderCategory = $_POST['order_category'] ?? CARD_CATEGORY_FILTER;
     $orderNo       = $_POST['order_no'] ?? ('ORD-' . strtoupper(substr(bin2hex(random_bytes(3)), 0, 6)));
@@ -273,7 +267,6 @@ if ($method === 'POST' && $action === 'claim') {
             respond(['success' => false, 'message' => 'Alamat pengiriman wajib diisi untuk hadiah fisik.'], 400);
         }
     }
-    // 'credit' type needs no extra input — applied automatically at checkout.
 
     $meta = reward_meta_for($rewardType);
     $claimedAt = date('Y-m-d H:i:s');
@@ -285,33 +278,30 @@ if ($method === 'POST' && $action === 'claim') {
         'status'     => $rewardType === 'physical' ? 'Diproses' : 'Selesai',
     ];
 
-    $card['reward_type'] = $rewardType;
+    $card['reward_type']  = $rewardType;
     $card['reward_code']  = $rewardCode;
     $card['claimed_at']   = $claimedAt;
     $card['card_status']  = 'claimed';
     $card['reset_count'] += 1;
 
-    // Reset card to 0/10 for the next cycle, per spec section 4.
+    // Reset kartu kembali ke 0 untuk siklus berikutnya
     $card['current_points'] = 0;
     $card['card_status']    = 'active';
 
     Store::saveUserCard((string) $user_id, $card);
 
     respond([
-        'success' => true,
-        'message' => 'Reward berhasil diklaim!',
+        'success'     => true,
+        'message'     => 'Reward berhasil diklaim!',
         'reward_type' => $rewardType,
         'reward_code' => $rewardCode,
-        'data' => card_view($card),
+        'data'        => card_view($card),
     ]);
 }
 
 if ($method === 'POST' && $action === 'simulate_purchase') {
-    // Demo-only helper (no payment gateway wired up in this codebase yet):
-    // lets the Rewards page "Simulasikan Pembelian" button exercise the same
-    // calculate() path that a real ON payment_success hook would call.
-    $amount   = (float) ($_POST['amount'] ?? 500000);
-    $orderNo  = 'ORD-' . strtoupper(substr(bin2hex(random_bytes(3)), 0, 6));
+    $amount  = (float) ($_POST['amount'] ?? 500000);
+    $orderNo = 'ORD-' . strtoupper(substr(bin2hex(random_bytes(3)), 0, 6));
     respond(do_calculate($card, (string) $user_id, $amount, (string) CARD_CATEGORY_FILTER, $orderNo));
 }
 

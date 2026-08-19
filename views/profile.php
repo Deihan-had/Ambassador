@@ -126,6 +126,34 @@ if (isset($_SESSION['user']) && is_array($_SESSION['user']) && !empty($_SESSION[
                     <i class="fa-solid fa-chevron-right text-xs text-slate-300 group-hover:text-emerald-600"></i>
                 </a>
 
+                <!-- Relative Path ke Cara Pembelian -->
+                <a href="/webdesign/views/pages/carapembelian.php" class="p-4 rounded-2xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/30 transition flex items-center justify-between group">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center group-hover:bg-emerald-600 group-hover:text-white transition">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-bold text-slate-800">Cara Pembelian</h3>
+                            <p class="text-xs text-slate-400">Langkah-langkah pemesanan</p>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-xs text-slate-300 group-hover:text-emerald-600"></i>
+                </a>
+
+                <!-- Relative Path ke Kebijakan Garansi -->
+                <a href="/webdesign/views/pages/kebijakangaransi.php" class="p-4 rounded-2xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/30 transition flex items-center justify-between group">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center group-hover:bg-emerald-600 group-hover:text-white transition">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-bold text-slate-800">Kebijakan Garansi</h3>
+                            <p class="text-xs text-slate-400">Syarat & ketentuan klaim</p>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-xs text-slate-300 group-hover:text-emerald-600"></i>
+                </a>
+
             </div>
 
             <!-- Profile Form -->

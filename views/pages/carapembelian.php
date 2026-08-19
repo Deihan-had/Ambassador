@@ -47,7 +47,7 @@ require_once __DIR__ . '/../../config/database.php';
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="h-16 flex items-center justify-between">
 
-                <a href="/index.php">
+                <a href="/webdesign/index.php">
                     <div class="flex items-center gap-2 cursor-pointer">
                         <div class="w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center text-white shadow-lg shadow-emerald-500/30">
                             <i class="fa-solid fa-bag-shopping text-xl"></i>
@@ -63,7 +63,7 @@ require_once __DIR__ . '/../../config/database.php';
                     </div>
                 </a>
 
-                <a href="/index.php" class="flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-emerald-600 transition">
+                <a href="/webdesign/index.php" class="flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-emerald-600 transition">
                     <i class="fa-solid fa-arrow-left"></i>
                     Kembali Belanja
                 </a>
@@ -336,7 +336,7 @@ require_once __DIR__ . '/../../config/database.php';
                 Temukan produk favoritmu di Ambassador.
             </p>
 
-            <a href="/index.php#productGrid" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-slate-900 hover:bg-emerald-600 text-white text-sm font-bold transition shadow-md">
+            <a href="/webdesign/index.php#productGrid" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-slate-900 hover:bg-emerald-600 text-white text-sm font-bold transition shadow-md">
                 <i class="fa-solid fa-bag-shopping"></i>
                 Mulai Belanja Sekarang
             </a>

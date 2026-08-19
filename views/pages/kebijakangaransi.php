@@ -44,7 +44,7 @@ require_once __DIR__ . '/../../config/database.php';
             <div class="h-16 flex items-center justify-between">
 
                 <!-- Logo -->
-                <a href="/index.php">
+                <a href="/webdesign/index.php">
                     <div class="flex items-center gap-2 cursor-pointer">
                         <div class="w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center text-white shadow-lg shadow-emerald-500/30">
                             <i class="fa-solid fa-bag-shopping text-xl"></i>
@@ -61,7 +61,7 @@ require_once __DIR__ . '/../../config/database.php';
                 </a>
 
                 <!-- BACK -->
-                <a href="/index.php" class="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-emerald-600 transition">
+                <a href="/webdesign/index.php" class="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-emerald-600 transition">
                     <i class="fa-solid fa-arrow-left"></i>
                     Kembali ke Toko
                 </a>
@@ -290,12 +290,12 @@ require_once __DIR__ . '/../../config/database.php';
             </h2>
 
             <p class="text-sm text-slate-500 mb-6">
-                Kunjungi Pusat Bantuan untuk melihat panduan dan informasi lainnya.
+                Hubungi Admin untuk melihat panduan dan informasi lainnya.
             </p>
 
-            <a href="/views/layanan/pusatbantuan.php" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-slate-900 hover:bg-emerald-600 text-white text-sm font-bold transition">
+            <a href="pusatbantuan/help.php" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-slate-900 hover:bg-emerald-600 text-white text-sm font-bold transition">
                 <i class="fa-solid fa-circle-question"></i>
-                Pusat Bantuan
+                Chat Admin
             </a>
         </section>
 
